@@ -226,6 +226,9 @@ body.menu-expanded > :not(nav) {
     visibility: visible !important;
     transform: translate(0) !important;
     height: 100vh;
+  }
+  #cta .questionare{
+    color: white !important;
   } 
 }
 @media screen and (min-width: 769px) {
