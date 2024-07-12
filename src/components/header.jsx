@@ -44,11 +44,8 @@ function Header() {
             to="/"
             className="logo d-flex align-items-center me-auto me-lg-0"
           >
-            <img height="40" src="./images/logo.png" alt="logo" />
-            <h1 className={`sitename ${scrolled ? "text-white" : "text-black"}`}>TetraWave</h1>
-            <span id="logo-dot" className="">
-              .
-            </span>
+            <img style={{width: "60px" , height: "60px" , maxHeight: "60px"}} src="./images/logo.webp" alt="logo" />
+            
           </Link>
           <div className={`menu ${menu ? "display expanded" : ""}`}>
             <ul className="menu-links">

@@ -1,0 +1,41 @@
+.card-body {
+  padding-bottom: 0;
+}
+
+.card-body ul {
+  margin-bottom: 0;
+}
+
+.card-body ul li {
+  border-bottom: 1px solid rgb(215, 215, 215);
+}
+
+.card-body ul li:last-child {
+  border-bottom: 0 !important;
+}
+
+/* width */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #888;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+@media screen and (max-width: 992px) {
+  .chat_section {
+    max-height: 300px;
+  }
+}

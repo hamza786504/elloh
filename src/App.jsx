@@ -1,13 +1,10 @@
 import Header from "./components/header";
 import Footer from "./components/footer";
 import TestimonList from "./components/testimonial";
-import "./App.css";
-import { Link } from "react-router-dom";
-import Contact from "./components/contact";
 import React, { useEffect, useState } from "react";
-import HashLink from "react-hash-link"
-import 'animate.css/animate.min.css';
 import { WOW } from 'wowjs';
+import 'animate.css/animate.min.css';
+import "./App.css";
 
 
 function App() {
