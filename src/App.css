@@ -177,6 +177,13 @@ nav .menu,
 nav .close-menu {
   position: fixed;
 }
+.main{
+  position: relative;
+}
+
+.menu-links{
+  padding-left: 0;
+}
 
 nav button,
 #cta button {
@@ -199,21 +206,32 @@ body.menu-expanded > :not(nav) {
   visibility: none;
 }
 
-.menu,
-.close-menu,
-body.menu-expanded .open-menu {
-  opacity: 0;
-  visibility: hidden;
+@media screen and (max-width: 768px){
+  .questionare{
+    color: black !important
+  }
+  .questionare:hover{
+    border: 1px solid white;
+    color: white !important;
+  }
+  .menu.display , .menu{
+    display: none;
+  } 
+  .menu.expanded{
+    background-color: black !important;
+    display: block;
+    top: 0; left: 0;
+    width: 100%;
+    opacity: 1 !important;
+    visibility: visible !important;
+    transform: translate(0) !important;
+    height: 100vh;
+  } 
 }
-
-body.menu-expanded .menu,
-body.menu-expanded .close-menu {
-  opacity: 1;
-  visibility: visible;
-}
-
-.menu {
-  transform: translateY(100%);
+@media screen and (min-width: 769px) {
+  .questionare:hover{
+    color: white !important
+  }
 }
 
 body.menu-expanded .menu {

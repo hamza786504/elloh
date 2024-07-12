@@ -5,6 +5,7 @@ import { WOW } from 'wowjs';
 
 function Header() {
   const [scrolled, setScrolled] = useState(false);
+  const [menu, setMenu] = useState(false);
 
   useEffect(() => {
     const wow = new WOW({
@@ -44,12 +45,12 @@ function Header() {
             className="logo d-flex align-items-center me-auto me-lg-0"
           >
             <img height="40" src="./images/logo.png" alt="logo" />
-            <h1 className={`sitename ${scrolled ? "text-white" : ""}`}>TetraWave</h1>
+            <h1 className={`sitename ${scrolled ? "text-white" : "text-black"}`}>TetraWave</h1>
             <span id="logo-dot" className="">
               .
             </span>
           </Link>
-          <div className="menu">
+          <div className={`menu ${menu ? "display expanded" : ""}`}>
             <ul className="menu-links">
               <li>
                 <Link to="/" className={scrolled ? "text-white" : ""}>Home</Link>
@@ -61,12 +62,13 @@ function Header() {
                 <Link to="/contact" className={scrolled ? "text-white" : ""}>Contact</Link>
               </li>
             </ul>
-            <button className={`questionare ${scrolled ? "text-white border-white" : ""}`}>Get Started</button>
+            <button className={`questionare ${scrolled ? "text-white border-white" : "text-black"}`}>Get Started</button>
           </div>
           <button
             aria-expanded="false"
             aria-label="Abrir menu"
             className="open-menu"
+            onClick={() => { setMenu(!menu) }}
           >
             <svg
               width="40"
@@ -77,31 +79,35 @@ function Header() {
             >
               <path
                 d="M10 20H30"
-                stroke="#00856F"
+                stroke={`${scrolled ? "#ffffff" : "#000000"}`}
                 strokeWidth="2"
                 strokeLinecap="round"
                 strokeLinejoin="round"
               />
               <path
                 d="M10 12H30"
-                stroke="#00856F"
+                stroke={`${scrolled ? "#ffffff" : "#000000"}`}
                 strokeWidth="2"
                 strokeLinecap="round"
                 strokeLinejoin="round"
               />
               <path
                 d="M18 28L30 28"
-                stroke="#00856F"
+                stroke={`${scrolled ? "#ffffff" : "#000000"}`}
                 strokeWidth="2"
                 strokeLinecap="round"
                 strokeLinejoin="round"
               />
             </svg>
           </button>
-          <button
+          {menu ? (
+            <button
             aria-expanded="true"
             aria-label="Fechar menu"
-            className="close-menu"
+            onClick={() => { 
+              setMenu(!menu); 
+            }}
+            className={`close-menu ${menu && "display expanded"}`}
           >
             <svg
               width="40"
@@ -112,13 +118,14 @@ function Header() {
             >
               <path
                 d="M30 10L10 30M10 10L30 30"
-                stroke="#FFFAF1"
+                stroke="#ffffff"
                 strokeWidth="2"
                 strokeLinecap="round"
                 strokeLinejoin="round"
               />
             </svg>
           </button>
+          ) : ""}
         </div>
       </nav>
     </>

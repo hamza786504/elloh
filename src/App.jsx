@@ -59,7 +59,7 @@ function App() {
               </p>
             </div>
           </div>
-          <div className="col-b text-center wow animate__animated animate__fadeInRight">
+          <div className="col-b text-center wow animate__animated animate__fadeInUp" data-wow-delay="0.4s">
             <img
               src="./images/robo.png"
               alt="robo"
@@ -67,7 +67,7 @@ function App() {
               style={{ maxHeight: "470px", objectFit: "contain" }}
             />
           </div>
-          <div className="stats">
+          <div className="stats" style={{zIndex: "100"}}>
             <div className="stat  wow animate__animated animate__fadeInUp" data-wow-delay="0.2s">
               <h3>
                 <svg
