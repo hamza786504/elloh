@@ -8,19 +8,16 @@ const ChatListItem = ({ avatarSrc, name, message, timestamp, unreadCount }) => {
     const calculateTimeAgo = () => {
       const timestampDate = timestamp instanceof Date ? timestamp : new Date(timestamp);
       const now = new Date();
-      const diffMs = now - timestampDate;
 
-      if (diffMs < 60000) {
-        // Less than a minute ago
-        setTimeAgo('Just now');
-      } else if (diffMs < 3600000) {
-        // Less than an hour ago
-        const minsAgo = Math.floor(diffMs / 60000);
-        setTimeAgo(`${minsAgo} mins ago`);
+      // Calculate difference in days
+      const diffDays = Math.floor((now - timestampDate) / (1000 * 60 * 60 * 24));
+
+      if (diffDays === 0) {
+        setTimeAgo('Today');
+      } else if (diffDays === 1) {
+        setTimeAgo('Yesterday');
       } else {
-        // More than an hour ago, show hours
-        const hoursAgo = Math.floor(diffMs / 3600000);
-        setTimeAgo(`${hoursAgo} hours ago`);
+        setTimeAgo(`${diffDays} days ago`);
       }
     };
 
@@ -41,17 +38,17 @@ const ChatListItem = ({ avatarSrc, name, message, timestamp, unreadCount }) => {
           <img src={avatarSrc}
             alt="avatar"
             className="rounded-circle d-flex align-self-center me-3 shadow-1-strong"
-            width="40"
+            width="35"
           />
           <div className='flex-grow-1'>
             <div className='d-flex align-items-center justify-content-between' style={{ width: "100%" }}>
-              <span className='fw-bold text-start d-flex flex-column align-items-start justify-content-between text-black mb-0'>{name}</span>
+              {/* <span className='fw-bold text-start d-flex flex-column align-items-start justify-content-between text-black mb-0'>{name}</span> */}
               <span className='d-flex flex-row align-items-center'>
-                {unreadCount > 0 && <span className="badge d-flex align-items-center justify-content-center bg-danger me-1" style={{ borderRadius: "50%", fontSize: "8px" }}>{unreadCount}</span>}
-                <p className="text-muted mb-0 ms-1" style={{ fontSize: "10px" }}>{timeAgo}</p>
+                {/* {unreadCount > 0 && <span className="badge d-flex align-items-center justify-content-center bg-danger me-1" style={{ borderRadius: "50%", fontSize: "8px" }}>{unreadCount}</span>} */}
+                <p className="mb-0 text-muted" style={{fontSize: "14px", lineHeight: 1.3 , color: "#43565A"}}>{message.slice(0, 30)}{message.length >= 30 ? "..." : ""}</p>
               </span>
             </div>
-            <p className="small text-muted">{message.slice(0, 30)}{message.length >= 30 ? "..." : ""}</p>
+            <p className="text-muted mb-0 text-start" style={{ fontSize: "10px" }}>{timeAgo}</p>
           </div>
         </div>
       </Link>
