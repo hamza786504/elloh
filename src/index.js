@@ -6,6 +6,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import reportWebVitals from "./reportWebVitals";
 import Chat from "./pages/chat.js";
 import Chat2 from "./pages/chat2.js";
+import Chat3 from "./pages/chat3.js";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
@@ -15,6 +16,7 @@ root.render(
         <Route path="/" exact element={<App />}></Route>
         <Route path="/chat" exact element={<Chat />}></Route>
         <Route path="/chat2" exact element={<Chat2 />}></Route>
+        <Route path="/chat3" exact element={<Chat3 />}></Route>
       </Routes>
     </BrowserRouter>
   </React.StrictMode>
