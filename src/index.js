@@ -16,7 +16,7 @@ root.render(
         <Route path="/" exact element={<App />}></Route>
         <Route path="/chat" exact element={<Chat />}></Route>
         <Route path="/chat2" exact element={<Chat2 />}></Route>
-        <Route path="/chat3" exact element={<Chat3 />}></Route>
+        <Route path="/chat3/:id?" exact element={<Chat3 />}></Route>
       </Routes>
     </BrowserRouter>
   </React.StrictMode>

@@ -1,417 +1,327 @@
-import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
-import { IoChatboxEllipses } from "react-icons/io5";
-import ChatListItem from "../components/chatbot/chatListItem";
-import { FaUser } from "react-icons/fa";
-import { WOW } from 'wowjs';
-import 'animate.css/animate.min.css';
-import "../styles/chat.css"
+import React, { useState, useEffect, useRef } from 'react';
+import { IoChatbubblesSharp } from "react-icons/io5";
+import { FaCircle } from "react-icons/fa";
+import { LuSend } from "react-icons/lu";
+import { FaBars, FaTimes } from "react-icons/fa";
+import '../styles/chat3.css';
 
-const Chat = () => {
-  const [activeChat, setActiveChat] = useState(null);
-  
+const App = () => {
+  const [chats, setChats] = useState([]);
+  const [userInput, setUserInput] = useState("");
+  const [cards, setCards] = useState([]);
+  const [sidebar, setSidebar] = useState(true);
+  const [selectedChat, setSelectedChat] = useState(null);
 
-  const chatData = [
-    {
-      avatarSrc: 'https://mdbcdn.b-cdn.net/img/Photos/Avatars/avatar-8.webp',
-      message: 'Help me to find low income men',
-      timestamp: new Date(),
-    },
-    {
-      avatarSrc: 'https://mdbcdn.b-cdn.net/img/Photos/Avatars/avatar-1.webp',
-      message: 'Help me to find low income men',
-      timestamp: new Date(new Date().getTime() - 5 * 60000),
-    },
-    {
-      avatarSrc: 'https://mdbcdn.b-cdn.net/img/Photos/Avatars/avatar-8.webp',
-      message: 'Help me to find low income men',
-      timestamp: new Date(),
-    },
-    {
-      avatarSrc: 'https://mdbcdn.b-cdn.net/img/Photos/Avatars/avatar-1.webp',
-      message: 'Help me to find low income men',
-      timestamp: new Date(new Date().getTime() - 5 * 60000),
-    },
-    {
-      avatarSrc: 'https://mdbcdn.b-cdn.net/img/Photos/Avatars/avatar-8.webp',
-      message: 'Help me to find low income men',
-      timestamp: new Date(),
-    },
-    {
-      avatarSrc: 'https://mdbcdn.b-cdn.net/img/Photos/Avatars/avatar-1.webp',
-      message: 'Help me to find low income men',
-      timestamp: new Date(new Date().getTime() - 5 * 60000),
-    },
-    {
-      avatarSrc: 'https://mdbcdn.b-cdn.net/img/Photos/Avatars/avatar-8.webp',
-      message: 'Help me to find low income men',
-      timestamp: new Date(),
-    },
-    {
-      avatarSrc: 'https://mdbcdn.b-cdn.net/img/Photos/Avatars/avatar-1.webp',
-      message: 'Help me to find low income men',
-      timestamp: new Date(new Date().getTime() - 5 * 60000),
-    },
-    {
-      avatarSrc: 'https://mdbcdn.b-cdn.net/img/Photos/Avatars/avatar-8.webp',
-      message: 'Help me to find low income men',
-      timestamp: new Date(),
-    },
-    {
-      avatarSrc: 'https://mdbcdn.b-cdn.net/img/Photos/Avatars/avatar-1.webp',
-      message: 'Help me to find low income men',
-      timestamp: new Date(new Date().getTime() - 5 * 60000),
-    },
-    {
-      avatarSrc: 'https://mdbcdn.b-cdn.net/img/Photos/Avatars/avatar-8.webp',
-      message: 'Help me to find low income men',
-      timestamp: new Date(),
-    },
-    {
-      avatarSrc: 'https://mdbcdn.b-cdn.net/img/Photos/Avatars/avatar-1.webp',
-      message: 'Help me to find low income men',
-      timestamp: new Date(new Date().getTime() - 5 * 60000),
-    },
-    {
-      avatarSrc: 'https://mdbcdn.b-cdn.net/img/Photos/Avatars/avatar-8.webp',
-      message: 'Help me to find low income men',
-      timestamp: new Date(),
-    },
-    {
-      avatarSrc: 'https://mdbcdn.b-cdn.net/img/Photos/Avatars/avatar-1.webp',
-      message: 'Help me to find low income men',
-      timestamp: new Date(new Date().getTime() - 5 * 60000),
-    },
-    {
-      avatarSrc: 'https://mdbcdn.b-cdn.net/img/Photos/Avatars/avatar-8.webp',
-      message: 'Help me to find low income men',
-      timestamp: new Date(),
-    },
-    {
-      avatarSrc: 'https://mdbcdn.b-cdn.net/img/Photos/Avatars/avatar-1.webp',
-      message: 'Help me to find low income men',
-      timestamp: new Date(new Date().getTime() - 5 * 60000),
-    },
-    {
-      avatarSrc: 'https://mdbcdn.b-cdn.net/img/Photos/Avatars/avatar-8.webp',
-      message: 'Help me to find low income men',
-      timestamp: new Date(),
-    },
-    {
-      avatarSrc: 'https://mdbcdn.b-cdn.net/img/Photos/Avatars/avatar-1.webp',
-      message: 'Help me to find low income men',
-      timestamp: new Date(new Date().getTime() - 5 * 60000),
-    },
-    {
-      avatarSrc: 'https://mdbcdn.b-cdn.net/img/Photos/Avatars/avatar-8.webp',
-      message: 'Help me to find low income men',
-      timestamp: new Date(),
-    },
-    {
-      avatarSrc: 'https://mdbcdn.b-cdn.net/img/Photos/Avatars/avatar-1.webp',
-      message: 'Help me to find low income men',
-      timestamp: new Date(new Date().getTime() - 5 * 60000),
-    },
-    {
-      avatarSrc: 'https://mdbcdn.b-cdn.net/img/Photos/Avatars/avatar-8.webp',
-      message: 'Help me to find low income men',
-      timestamp: new Date(),
-    },
-    {
-      avatarSrc: 'https://mdbcdn.b-cdn.net/img/Photos/Avatars/avatar-1.webp',
-      message: 'Help me to find low income men',
-      timestamp: new Date(new Date().getTime() - 5 * 60000),
-    },
-    {
-      avatarSrc: 'https://mdbcdn.b-cdn.net/img/Photos/Avatars/avatar-8.webp',
-      message: 'Help me to find low income men',
-      timestamp: new Date(),
-    },
-    {
-      avatarSrc: 'https://mdbcdn.b-cdn.net/img/Photos/Avatars/avatar-1.webp',
-      message: 'Help me to find low income men',
-      timestamp: new Date(new Date().getTime() - 5 * 60000),
-    },
-    {
-      avatarSrc: 'https://mdbcdn.b-cdn.net/img/Photos/Avatars/avatar-8.webp',
-      message: 'Help me to find low income men',
-      timestamp: new Date(),
-    },
-    {
-      avatarSrc: 'https://mdbcdn.b-cdn.net/img/Photos/Avatars/avatar-1.webp',
-      message: 'Help me to find low income men',
-      timestamp: new Date(new Date().getTime() - 5 * 60000),
-    },
-    {
-      avatarSrc: 'https://mdbcdn.b-cdn.net/img/Photos/Avatars/avatar-8.webp',
-      message: 'Help me to find low income men',
-      timestamp: new Date(),
-    },
-    {
-      avatarSrc: 'https://mdbcdn.b-cdn.net/img/Photos/Avatars/avatar-1.webp',
-      message: 'Help me to find low income men',
-      timestamp: new Date(new Date().getTime() - 5 * 60000),
-    },
-    {
-      avatarSrc: 'https://mdbcdn.b-cdn.net/img/Photos/Avatars/avatar-8.webp',
-      message: 'Help me to find low income men',
-      timestamp: new Date(),
-    },
-    {
-      avatarSrc: 'https://mdbcdn.b-cdn.net/img/Photos/Avatars/avatar-1.webp',
-      message: 'Help me to find low income men',
-      timestamp: new Date(new Date().getTime() - 5 * 60000),
-    },
-    {
-      avatarSrc: 'https://mdbcdn.b-cdn.net/img/Photos/Avatars/avatar-8.webp',
-      message: 'Help me to find low income men',
-      timestamp: new Date(),
-    },
-    {
-      avatarSrc: 'https://mdbcdn.b-cdn.net/img/Photos/Avatars/avatar-1.webp',
-      message: 'Help me to find low income men',
-      timestamp: new Date(new Date().getTime() - 5 * 60000),
-    },
-    {
-      avatarSrc: 'https://mdbcdn.b-cdn.net/img/Photos/Avatars/avatar-8.webp',
-      message: 'Help me to find low income men',
-      timestamp: new Date(),
-    },
-    {
-      avatarSrc: 'https://mdbcdn.b-cdn.net/img/Photos/Avatars/avatar-1.webp',
-      message: 'Help me to find low income men',
-      timestamp: new Date(new Date().getTime() - 5 * 60000),
-    },
-    {
-      avatarSrc: 'https://mdbcdn.b-cdn.net/img/Photos/Avatars/avatar-8.webp',
-      message: 'Help me to find low income men',
-      timestamp: new Date(),
-    },
-    {
-      avatarSrc: 'https://mdbcdn.b-cdn.net/img/Photos/Avatars/avatar-1.webp',
-      message: 'Help me to find low income men',
-      timestamp: new Date(new Date().getTime() - 5 * 60000),
-    },
-  ];
+  const messageListRef = useRef(null);
 
-  useEffect(() => {
-    const wow = new WOW({
-      boxClass: 'wow',            // default
-      animateClass: 'animate__animated', // default
-      offset: 0,                 // default
-      mobile: true,              // default
-      live: true                 // default
-    });
-    wow.init();
-  }, []);
-
-  const handleChatSelect = (profile) => {
-    setActiveChat(profile);
+  // Function to scroll to bottom of message list
+  const scrollToBottom = () => {
+    if (messageListRef.current) {
+      messageListRef.current.scrollTop = messageListRef.current.scrollHeight;
+    }
   };
 
+  // Function to handle user input change
+  const handleUserInputChange = (e) => {
+    setUserInput(e.target.value);
+  };
 
- 
+  // Function to handle clicking on a chat item
+  const handleChatItemClick = (chat_id) => {
+    setSelectedChat(chat_id);
+    if (window.innerWidth < 766) setSidebar(false);
+  };
+
+  const newChat = () => {
+    setSelectedChat(null);
+  };
+
+  // Function to handle sending a message
+  const onSendButtonClick = () => {
+    if (!userInput.trim() || selectedChat === null) {
+      return;
+    }
+
+    const filteredChat = chats.find(chat => chat.chat_id === selectedChat);
+
+    if (!filteredChat) {
+      console.error(`Chat with chat_id ${selectedChat} not found.`);
+      return;
+    }
+
+    const newMessage = {
+      message_id: filteredChat.chat.length + 1,
+      message: userInput.trim(),
+      timestamp: new Date().toISOString(),
+      from: "user"
+    };
+
+    const updatedChats = chats.map(chat =>
+      chat.chat_id === selectedChat
+        ? { ...chat, chat: [...chat.chat, newMessage] }
+        : chat
+    );
+
+    setChats(updatedChats);
+    localStorage.setItem("chats", JSON.stringify(updatedChats));
+    setUserInput("");
+  };
+
+  const startChat = (initialMessage) => {
+    // Generate a random chat_id between 1 and 10,000,000
+    const randomChatId = Math.floor(Math.random() * 10000000) + 1;
+    
+    setSelectedChat(randomChatId);
+    const newChat = {
+      chat_id: randomChatId,
+      chat: [{
+        message_id: 1,
+        message: initialMessage,
+        timestamp: new Date().toISOString(),
+        from: "bot"
+      }]
+    };
+
+    setChats([...chats, { ...newChat }]);
+    localStorage.setItem("chats", JSON.stringify([...chats, { ...newChat }]));
+  };
+
+  // Function to calculate days ago from timestamp
+  const getDaysAgo = (timestamp) => {
+    const msPerDay = 24 * 60 * 60 * 1000;
+    const currentTimestamp = new Date().setHours(0, 0, 0, 0);
+    const messageTimestamp = new Date(timestamp).setHours(0, 0, 0, 0);
+    const daysDiff = Math.round((currentTimestamp - messageTimestamp) / msPerDay);
+
+    if (daysDiff === 0) {
+      return 'Today';
+    } else if (daysDiff === 1) {
+      return 'Yesterday';
+    } else {
+      return `${daysDiff} day${daysDiff !== 1 ? 's' : ''} ago`;
+    }
+  };
+
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth > 766) {
+        setSidebar(true);
+      } else {
+        setSidebar(false);
+      }
+    };
+
+    handleResize();
+
+    window.addEventListener('resize', handleResize);
+
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
+
+  // Determine if there are user messages in the selected chat
+  const hasUserMessages = selectedChat !== null && chats.some(chat =>
+    chat.chat_id === selectedChat && chat.chat.some(message => message.from === "user")
+  );
+
+  // Initialize chats and cards on component mount
+  useEffect(() => {
+    // if (window.innerWidth < 766) setSidebar(false);
+    // if (window.innerWidth > 766) setSidebar(true);
+    const storedChats = JSON.parse(localStorage.getItem("chats")) || [];
+    setChats(storedChats);
+
+    setCards([
+      {
+        id: 1,
+        imageSrc: './images/Borrower.png',
+        altText: 'Borrower',
+        text: 'I am a borrower searching for my own mortgage solution...',
+        initialMessage: 'I am a borrower searching for my own mortgage solution...'
+      },
+      {
+        id: 2,
+        imageSrc: './images/Broker.png',
+        altText: 'Broker',
+        text: 'I am a broker working on behalf of a client',
+        initialMessage: 'I am a broker working on behalf of a client'
+      },
+      {
+        id: 3,
+        imageSrc: './images/Purchase.png',
+        altText: 'Purchase',
+        text: 'I am looking to purchase a property',
+        initialMessage: 'I am looking to purchase a property'
+      },
+      {
+        id: 4,
+        imageSrc: './images/Refi.png',
+        altText: 'Refi',
+        text: 'I am looking to refinance a property',
+        initialMessage: 'I am looking to refinance a property'
+      },
+      {
+        id: 5,
+        imageSrc: './images/RefID.png',
+        altText: 'Ref ID',
+        text: 'Enter a reference number from a previous conversation',
+        initialMessage: 'Enter a reference number from a previous conversation'
+      },
+      {
+        id: 6,
+        imageSrc: './images/LiveAgent.png',
+        altText: 'Live Agent',
+        text: 'Transfer me to a live agent now',
+        initialMessage: 'Transfer me to a live agent now'
+      }
+    ]);
+  }, []);
+
+  // Scroll to bottom whenever selectedChat or chats change
+  useEffect(() => {
+    scrollToBottom();
+  }, [selectedChat, chats]);
+
   return (
-    <>
-      <div className="container-fluid p-0 chat_page" style={{ minHeight: "100vh", maxWidth: "1600px" }}>
-        <div className="row px-3 py-4 align-items-stretch justify-content-center" style={{ height: "100%" }}>
-          <div className="col-12 col-lg-4 col-xl-2 pe-0 d-flex flex-column align-items-start text-start">
-            <div className="d-flex align-items-center">
-              <button type="button" className="p-2 px-3 btn btn-outline-secondary" style={{ fontSize: "16px" }}>
-                <IoChatboxEllipses className="me-2" /> New Chat
+    <div className="container">
+      <div className="row clearfix">
+        <div className="col-lg-12">
+          <div className="card chat-app">
+            {/* Sidebar for chat list */}
+            <div id="plist" className={`${sidebar ? "open d-block" : "d-none"} people-list`}>
+              <button id="closePeopleList" onClick={() => setSidebar(false)} className={`${sidebar ? "d-block" : "d-none"} close-btn d-md-none`}>
+                <FaTimes />
+              </button>
+              <div className="d-flex justify-content-start mb-2">
+                <button className="px-3 btn btn-outline-secondary" onClick={() => { newChat() }} style={{ fontSize: "16px" }}>
+                  <IoChatbubblesSharp /> New Chat
+                </button>
+              </div>
+              <hr />
+              <ul className="chat-list mt-2 mb-0" id="chatList">
+                {chats?.map((chat, key) => (
+                  <li className={`text-start ${chat.chat_id === selectedChat ? "active" : ""}`} onClick={() => handleChatItemClick(chat.chat_id)} key={key}>
+                    <p className='message'>{chat.chat[0].message}</p>
+                    <p className='status'><FaCircle /> {getDaysAgo(chat.chat[0].timestamp)}</p>
+                  </li>
+                ))}
+              </ul>
+            </div>
+            {/* Overlay button */}
+            <div className="overlay" id="overlay">
+              <button id="" className="btn btn-outline-secondary d-md-none">
+                <FaBars />
               </button>
             </div>
-            <div className="my-4 w-95 w-100" style={{ background: "gray", paddingRight: "20px", height: "1px"}}></div>
-            <div className="flex-grow-1 w-95 w-100 chat_section" style={{ height: "400px", overflowY: "scroll"}}>
-              <div style={{ height: "100%" }}>
-                <div>
-                  <div className="card-body">
-                    <ul className="list-unstyled">
-                      {chatData.map((item, index) => (
-                        <ChatListItem
-                          key={index} // Use a more stable key if possible
-                          avatarSrc={item.avatarSrc}
-                          name={item.name}
-                          message={item.message}
-                          timestamp={item.timestamp}
-                          unreadCount={item.unreadCount || 0}
-                        />
-                      ))}
-                    </ul>
+            {/* Chat container */}
+            <div id="chat-container" className="chat">
+              <div className="chat-header clearfix">
+                <div className="row">
+                  <div className="col-6 col-md-6 items-center">
+                    <img src="./images/ELLOH.png" alt="avatar" />
+                    <div className="chat-about">
+                      <h6 className="m-b-0">ELLOH</h6>
+                    </div>
+                  </div>
+                  <div className="col-6 col-md-6 d-flex align-items-center justify-content-end text-right">
+                    <button id="showPeopleList" style={{ fontSize: "17px" }} className="me-0 btn btn-outline-secondary d-md-none" onClick={() => { setSidebar(!sidebar) }}>
+                      <FaBars />
+                    </button>
+                  </div>
+                </div>
+                <span className="header-title">
+                  Find the mortgage you qualify for now. Without the hassle.
+                </span>
+              </div>
+              {/* Render cards for chat options */}
+              <div className="chat-history" ref={messageListRef}>
+                {!hasUserMessages && (
+                  <div className="row image-container">
+                    {cards?.map(card => (
+                      <Card
+                        key={card.id}
+                        imageSrc={card.imageSrc}
+                        altText={card.altText}
+                        text={card.text}
+                        onClick={() => startChat(card.initialMessage)}
+                      />
+                    ))}
+                  </div>
+                )}
+                {/* Render chat messages */}
+                <ul className="m-b-0" id="messageList">
+                  {chats
+                    .filter(chat => chat.chat_id === selectedChat) // Filter chats with selectedChat
+                    .map((chat, index) => (
+                      <li className="clearfix" key={index}>
+                        {chat.chat.map((message, index) => (
+                          <div key={index}>
+                            {message.from === "bot" ? (
+                              <div className="d-flex mt-2 justify-content-end">
+                                <div className="message other-message float-right">{message.message}</div>
+                                <img src="./images/ELLOH.png" alt="avatar" className="img-bot" />
+                              </div>
+                            ) : (
+                              <div className='text-start'>
+                                <div className="message-data">
+                                  <span className="message-data-time">{new Date(message.timestamp).toLocaleString()}</span>
+                                </div>
+                                <div className="message my-message">{message.message}</div>
+                              </div>
+                            )}
+                            <hr />
+                          </div>
+                        ))}
+                      </li>
+                    ))}
+                </ul>
+              </div>
+              {/* Input for user to send messages */}
+              <div className="chat-message clearfix">
+                <div className="input-group mb-0">
+                  <input
+                    id="userInput"
+                    type="text"
+                    className="form-control"
+                    placeholder="Find the help you need here..."
+                    value={userInput}
+                    onChange={(e) => { handleUserInputChange(e) }}
+                    onKeyPress={(e) => {
+                      if (e.key === 'Enter') {
+                        onSendButtonClick();
+                      }
+                    }}
+                  />
+                  <div className="input-group-prepend">
+                    <span className="input-group-text">
+                      <button className="btn btn-outline-secondary d-flex align-items-center justify-content-center" style={{ height: "35px" }} onClick={() => onSendButtonClick()}>
+                        <LuSend style={{ fontSize: "18px", marginBottom: "-2px" }} />
+                      </button>
+                    </span>
                   </div>
                 </div>
               </div>
             </div>
           </div>
-          <div className="col-12 d-flex align-items-start flex-column col-lg-8 col-xl-10 pe-0" style={{ maxHeight: "95vh" }}>
-            <div className="ps-4 d-flex flex-column w-100" style={{ borderLeft: "1px solid #d2d2d2", marginRight: "-10px", height: "100%" }}>
-              <nav className="navbar navbar-light bg-transparent py-0" style={{ height: "40px" }}>
-                <Link className="d-flex align-items-center text-black" style={{ textDecoration: "none" }} to="/chat">
-                  <img
-                    src="/images/ELLOH.png"
-                    alt="logo"
-                    width="40"
-                    height="40"
-                    className="d-inline-block align-text-end"
-                  />
-                  <h4 className="ms-1" style={{ marginBottom: "-3px" }}>ELLOH</h4>
-                </Link>
-                <p className="position-absolute text-black" style={{ left: "50%", transform: "translateX(-50%)", bottom: "-40%", fontSize: "13px" }}>Find the mortgage you qualify for now , whithout the hassle</p>
-              </nav>
-              <section className={`flex-grow-1 p-0 d-flex align-items-center flex-column justify-content-center  ${activeChat ? "align-items-end flex-row w-full" : ""} container-fluid`}>
-                {activeChat === null ? (
-                  <div className="row px-4 align-items-stretch">
-                    <ProfileImage
-                      src="/images/Borrower.png"
-                      alt="Borrower"
-                      description="I am Borrower searching for own mortgage solution..."
-                      delay="0.2"
-                      onClick={() => handleChatSelect("borrower")}
-                    />
-                    <ProfileImage
-                      src="/images/Broker.png"
-                      alt="Broker"
-                      description="i am broker working on behalf of client.."
-                      delay="0.5"
-                      onClick={() => handleChatSelect("Broker")}
-                    />
-                    <ProfileImage
-                      src="/images/Purchase.png"
-                      alt="Purchase"
-                      description="I am looking to purchase a property.."
-                      delay="0.8"
-                      onClick={() => handleChatSelect("Purchase")}
-                    />
-                    <ProfileImage
-                      src="/images/Refi.png"
-                      alt="Refi"
-                      description="i am looking to refinance a property..."
-                      delay="1.1"
-                      onClick={() => handleChatSelect("refinance")}
-                    />
-                    <ProfileImage
-                      src="/images/RefID.png"
-                      alt="RefID"
-                      description=" Enter a reference number from a previous conversation..."
-                      delay="1.4"
-                      onClick={() => handleChatSelect("ReferenceId")}
-                    />
-                    <ProfileImage
-                      src="/images/LiveAgent.png"
-                      alt="LiveAgent"
-                      description="tranfer me to a live agent now..."
-                      delay="1.7"
-                      onClick={() => handleChatSelect("LiveAgent")}
-                    />
-                  </div>
-                ) : <ChatContent />}
-              </section>
-            </div>
-          </div>
-        </div >
-      </div >
-    </>
-  );
-};
-
-const ProfileImage = ({ src, alt, description, onClick, delay }) => {
-  return (
-    <div className="mt-4 px-2 col-sm-6 col-12 wow animate__animated animate__fadeInUp" data-wow-delay={`${delay}s`}>
-      <div onClick={onClick} className="text-center mx-auto shadow-sm" style={{ height: "100%" }}>
-        <img src={src} alt={alt} className="profile-img mx-auto" style={{ maxWidth: "30px" }} />
-        <hr />
-        <p className="mb-3 p-3 mx-3" style={{ background: "#f8f8f8" }}>{description}</p>
+        </div>
       </div>
     </div>
   );
 };
 
-const ChatContent = () => {
-  const [messages, setMessages] = useState([]);
-  const [message, setMessage] = useState("");
-  const onChangeMessage = (e) => {
-    setMessage(e.target.value)
-  }
-
-  useEffect(() => {
-    const initialMessage = {
-      text: "Hello! How can I help you today?",
-      fromUser: false,
-      timestamp: new Date().toISOString(),
-    };
-    setMessages([initialMessage]);
-  }, []);
-  const sendMessage = (messageText) => {
-    setMessage("");
-    const newMessage = {
-      text: messageText,
-      fromUser: true,
-      timestamp: new Date().toISOString(),
-    };
-    setMessages(prevMessages => [...prevMessages, newMessage]);
-    setTimeout(() => {
-      const botMessage = {
-        text: "Sure, here is the response from the chatbot.",
-        fromUser: false,
-        timestamp: new Date().toISOString(),
-      };
-      setMessages(prevMessages => [...prevMessages, botMessage]);
-    }, 2000);
-  };
-  return (
-    <>
-      <div className="chat-content d-flex flex-column flex-grow-1 pt-4" style={{ width: "100%" }}>
-        <div className="flex-grow-1 pe-0 d-flex flex-column justify-content-end" style={{ height: "70px", overflowY: "scroll" }}>
-          {messages.map((message, index) => (
-            <div key={index} className={`d-flex justify-content-${message.fromUser ? 'start' : 'end'} align-items-${message.fromUser ? 'center' : 'start'} mb-4`}>
-              {message.fromUser && (
-                <div style={{ height: "35px" }}>
-                  <FaUser className="me-2 mt-3" />
-                </div>
-              )}
-              <p className={`mb-0 text-${message.fromUser ? 'start' : 'end'} border text-black p-3 rounded border-0`} style={{ backgroundColor: "#E7F2F4" }}>
-                {message.text}
-              </p>
-              {!message.fromUser && (
-                <div style={{ height: "35px" }}>
-                  <img
-                    src="/images/ELLOH.png"
-                    alt="avatar"
-                    className="mt-2 me-2 rounded-circle d-flex align-self-start ms-3 shadow-1-strong"
-                    width="30"
-                  />
-                </div>
-              )}
-
-            </div>
-          ))}
-        </div>
+// Component for rendering each card
+const Card = ({ imageSrc, altText, text, onClick }) => (
+  <div className="col-6">
+    <div className="btn card-btn text-center card border-secondary mb-3" onClick={onClick}>
+      <div className="image-container">
+        <img className="card-img my-4" style={{ maxWidth: "60px" }} src={imageSrc} alt={altText} />
       </div>
-      <div className="input-group w-full" style={{ border: "1px solid black !important" }}>
-        <input
-          type="text"
-          className="w-full p-4 flex-grow-1"
-          style={{ background: "#f5f5f5", border: "0" }}
-          placeholder="Type your message..."
-          value={message}
-          onChange={(e) => {onChangeMessage(e)}}
-          onKeyDown={(e) => {
-            if (e.key === 'Enter') {
-              sendMessage(message);
-              setMessage("");
-            }
-          }}
-        />
-        <button
-          type="button"
-          onClick={() => sendMessage(message)}
-          style={{ width: "50px", background: "#f5f5f5", border: "none", borderLeft: "1px solid rgba(0,0,0,0.17)" }}
-        >
-          <i className="bi bi-send-fill py-5 fs-2"></i>
-        </button>
+      <div className="card-footer text-muted">
+        {text}
       </div>
-    </>
-  );
-};
+    </div>
+  </div>
+);
 
-export default Chat;
+export default App;

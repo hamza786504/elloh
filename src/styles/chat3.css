@@ -56,7 +56,7 @@ body {
     border-radius: 3px;
   }
   
-  .people-list .chat-list li:hover {
+  .people-list .chat-list li:hover , .people-list .chat-list li.active {
     background: #efefef;
     cursor: pointer;
   }
