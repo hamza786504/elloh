@@ -74,8 +74,8 @@ const App = () => {
         id: 1,
         imageSrc: './images/Borrower.png',
         altText: 'Borrower',
-        text: 'I am a borrower searching for my own mortgage solution...',
-        initialMessage: 'I am a borrower searching for my own mortgage solution...',
+        text: ' I am a borrower searching for a mortgage',
+        initialMessage: ' I am a borrower searching for a mortgage',
       },
       {
         id: 2,
@@ -102,15 +102,15 @@ const App = () => {
         id: 5,
         imageSrc: './images/RefID.png',
         altText: 'Ref ID',
-        text: 'Enter a reference number from a previous conversation',
-        initialMessage: 'Enter a reference number from a previous conversation',
+        text: 'Enter a REF ID from a previous conversation',
+        initialMessage: 'Enter a REF ID from a previous conversation',
       },
       {
         id: 6,
         imageSrc: './images/LiveAgent.png',
         altText: 'Live Agent',
-        text: 'Transfer me to a live agent now',
-        initialMessage: 'Transfer me to a live agent now',
+        text: 'Schedule a live agent call now',
+        initialMessage: 'Schedule a live agent call now',
       },
     ]);
   }, []);
@@ -213,7 +213,7 @@ const App = () => {
               </button>
               <div className="d-flex justify-content-start mb-2">
                 <button
-                  className="px-3 btn btn-outline-secondary"
+                  className="px-3 btn  fw-semibold btn-outline-secondary"
                   onClick={() => setSelectedChat(null)}
                   style={{ paddingTop: "10px", paddingBottom: "10px", fontSize: '16px' }}
                 >
@@ -243,7 +243,7 @@ const App = () => {
               <div className="chat-header clearfix pb-1 pb-md-2">
                 <div className="row">
                   <div className="col-6 col-md-6 items-center">
-                    <img src="./images/logo.webp" style={{ cursor: "pointer" }} alt="avatar" onClick={() => setSelectedChat(null)} />
+                    <img src="./images/ELLOH.png" style={{ cursor: "pointer" }} alt="avatar" onClick={() => setSelectedChat(null)} /><p className='ms-2' style={{fontSize: "20px" , fontWeight: "500" , marginBottom: "-2px"}}>ELLOH</p>
                   </div>
                   <div className="col-6 col-md-6 d-flex align-items-center justify-content-end text-right">
                     <button
@@ -283,7 +283,7 @@ const App = () => {
                             {message.from === 'bot' ? (
                               <div className="d-flex mt-2 justify-content-end">
                                 <div className="message other-message float-right">{message.message}</div>
-                                <img src="./images/logo.webp" alt="avatar" className="img-bot" />
+                                <img src="./images/ELLOH.png" alt="avatar" className="img-bot" />
                               </div>
                             ) : (
                               <div className="text-start">
