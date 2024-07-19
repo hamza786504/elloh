@@ -12,6 +12,7 @@ const App = () => {
   const [cards, setCards] = useState([]);
   const [sidebar, setSidebar] = useState(true);
   const [selectedChat, setSelectedChat] = useState(null);
+  const [chatStarted, setChatStarted] = useState(false); // Track if chat has been started
 
   const messageListRef = useRef(null);
 
@@ -27,71 +28,7 @@ const App = () => {
     setUserInput(e.target.value);
   };
 
-  // Function to handle clicking on a chat item
-  const handleChatItemClick = (chat_id) => {
-    setSelectedChat(chat_id);
-    if (window.innerWidth < 766) setSidebar(false);
-  };
 
-  const newChat = () => {
-    setSelectedChat(null);
-  };
-
-  // Function to handle sending a message
-  const onSendButtonClick = async () => {
-    if (!userInput.trim() || selectedChat === null) {
-      return;
-    }
-
-    const filteredChat = chats.find((chat) => chat.chat_id === selectedChat);
-
-    if (!filteredChat) {
-      console.error(`Chat with chat_id ${selectedChat} not found.`);
-      return;
-    }
-
-    const newMessage = {
-      message_id: filteredChat.chat.length + 1,
-      message: userInput.trim(),
-      timestamp: new Date().toISOString(),
-      from: 'user',
-    };
-
-    const updatedChats = chats.map((chat) =>
-      chat.chat_id === selectedChat ? { ...chat, chat: [...chat.chat, newMessage] } : chat
-    );
-
-    setChats(updatedChats);
-    localStorage.setItem('chats', JSON.stringify(updatedChats));
-    const message = userInput.trim();
-    setUserInput('');
-    // Make API request to send user message and receive bot response
-    try {
-      const response = await axios.post('https://backendv1.flatfeebizloans.com/api/conversation', {
-        message,
-        ip: 'dummy_ip', // Replace with actual IP if needed
-      });
-
-      const botMessage = {
-        message_id: updatedChats.length + 1,
-        message: response.data.message,
-        timestamp: new Date().toISOString(),
-        from: 'bot',
-      };
-
-      const updatedChatWithBot = updatedChats.map((chat) =>
-        chat.chat_id === selectedChat ? { ...chat, chat: [...chat.chat, botMessage] } : chat
-      );
-
-      setChats(updatedChatWithBot);
-      localStorage.setItem('chats', JSON.stringify(updatedChatWithBot));
-
-      scrollToBottom(); // Scroll to bottom after updating chat with bot response
-    } catch (error) {
-      console.error('Error sending message:', error);
-      // Handle error if necessary
-    }
-  };
 
   // Function to calculate days ago from timestamp
   const getDaysAgo = (timestamp) => {
@@ -188,35 +125,85 @@ const App = () => {
     chat.chat_id === selectedChat && chat.chat.some((message) => message.from === 'user')
   );
 
-  // Function to start a new chat
-  const startChat = (initialMessage) => {
-    // Generate a random chat_id between 1 and 10,000,000
-    const randomChatId = Math.floor(Math.random() * 10000000) + 1;
-
-    setSelectedChat(randomChatId);
-    const newChat = {
-      chat_id: randomChatId,
-      chat: [
-        {
-          message_id: 1,
-          message: initialMessage,
-          timestamp: new Date().toISOString(),
-          from: 'bot',
-        },
-      ],
-    };
-
-    setChats([...chats, { ...newChat }]);
-    localStorage.setItem('chats', JSON.stringify([...chats, { ...newChat }]));
+  const handleKeyPress = (e) => {
+    if (e.key === 'Enter') {
+      onSendButtonClick();
+    }
   };
+
+
+
+
+  const onSendButtonClick = async () => {
+    let id = selectedChat !== null ? selectedChat : Math.floor(Math.random() * 10000000) + 1;
+  
+    const userInputMessage = userInput.trim();
+    setUserInput("");
+  
+    const userMessage = {
+      message_id: chats.length + 1, // Note: This may cause issues if messages are deleted locally or from storage
+      message: userInputMessage,
+      timestamp: new Date().toISOString(),
+      from: 'user',
+    };
+  
+    // Create a new array with updated chats
+    const updatedChats = [...chats];
+    let filteredChat = updatedChats.find(chat => chat.chat_id === id);
+  
+    if (!filteredChat) {
+      filteredChat = {
+        chat_id: id,
+        chat: [],
+      };
+      updatedChats.push(filteredChat);
+    }
+  
+    filteredChat.chat.push(userMessage);
+  
+    // Update chats state immediately after adding user message
+    setChats(updatedChats);
+    setSelectedChat(id); // Set selectedChat to current chat id
+    localStorage.setItem('chats', JSON.stringify(updatedChats));
+  
+    try {
+      const response = await axios.post('https://backendv1.flatfeebizloans.com/api/conversation', {
+        message: userInputMessage,
+        ip: 'dummy_ip',
+      });
+  
+      const botMessage = {
+        message_id: filteredChat.chat.length + 1,
+        message: response.data.message,
+        timestamp: new Date().toISOString(),
+        from: 'bot',
+      };
+  
+      filteredChat.chat.push(botMessage);
+  
+      // Update chats state after receiving bot response
+      setChats([...updatedChats]); // Create a new array to trigger state update
+      setSelectedChat(id); // Set selectedChat to current chat id
+      localStorage.setItem('chats', JSON.stringify(updatedChats));
+      scrollToBottom(); // Scroll to bottom after bot response is added
+    } catch (error) {
+      console.error('Error sending message:', error);
+    }
+  };
+  
+  
+  
+
+
+
 
   return (
     <div className="container">
       <div className="row clearfix">
         <div className="col-lg-12">
-          <div className="card chat-app">
+          <div className="card chat-app" style={{ maxHeight: "100vh" }} >
             {/* Sidebar for chat list */}
-            <div id="plist" className={`${sidebar ? 'open d-block' : 'd-none'} people-list`}>
+            <div id="plist" className={`${sidebar ? 'open d-block' : 'd-none'} h-100 people-list`}>
               <button
                 id="closePeopleList"
                 onClick={() => setSidebar(false)}
@@ -225,14 +212,18 @@ const App = () => {
                 <FaTimes />
               </button>
               <div className="d-flex justify-content-start mb-2">
-                <button className="px-3 btn btn-outline-secondary" onClick={() => newChat()} style={{ paddingTop: "10px", paddingBottom: "10px", fontSize: '16px' }}>
+                <button
+                  className="px-3 btn btn-outline-secondary"
+                  onClick={() => setSelectedChat(null)}
+                  style={{ paddingTop: "10px", paddingBottom: "10px", fontSize: '16px' }}
+                >
                   <IoChatbubblesSharp className='me-2' style={{ fontSize: "20px" }} /> New Chat
                 </button>
               </div>
               <hr />
-              <ul className="chat-list mt-2 mb-0" id="chatList">
+              <ul className="chat-list mt-2 mb-0 ps-0" id="chatList">
                 {chats?.map((chat, key) => (
-                  <li className={`text-start ${chat.chat_id === selectedChat ? 'active' : ''}`} onClick={() => handleChatItemClick(chat.chat_id)} key={key}>
+                  <li className={`text-start ${chat.chat_id === selectedChat ? 'active' : ''}`} onClick={() => { window.innerWidth > 766 ? setSidebar(true) : setSidebar(false); setSelectedChat(chat.chat_id) }} key={key}>
                     <p className="message">{chat.chat[0].message}</p>
                     <p className="status">
                       <FaCircle /> {getDaysAgo(chat.chat[0].timestamp)}
@@ -252,10 +243,15 @@ const App = () => {
               <div className="chat-header clearfix pb-1 pb-md-2">
                 <div className="row">
                   <div className="col-6 col-md-6 items-center">
-                    <img src="./images/logo.webp" style={{ cursor: "pointer" }} alt="avatar" onClick={() => newChat()} />
+                    <img src="./images/logo.webp" style={{ cursor: "pointer" }} alt="avatar" onClick={() => setSelectedChat(null)} />
                   </div>
                   <div className="col-6 col-md-6 d-flex align-items-center justify-content-end text-right">
-                    <button id="showPeopleList" style={{ fontSize: '17px', height: "40px" }} className="d-flex align-items-center me-0 btn btn-outline-secondary d-md-none" onClick={() => setSidebar(!sidebar)}>
+                    <button
+                      id="showPeopleList"
+                      style={{ fontSize: '17px', height: "40px" }}
+                      className="d-flex align-items-center me-0 btn btn-outline-secondary d-md-none"
+                      onClick={() => setSidebar(true)}
+                    >
                       <FaBars />
                     </button>
                   </div>
@@ -263,16 +259,15 @@ const App = () => {
                 <span className="header-title text-center">Find the mortgage you qualify for now. Without the hassle.</span>
               </div>
               {/* Render cards for chat options */}
-              <div className="chat-history" ref={messageListRef}>
+              <div className="px-3 chat-history flex-grow-1" ref={messageListRef} style={{ overflowY: "scroll", overflowX: "hidden" }}>
                 {!hasUserMessages && (
-                  <div className="row image-container">
+                  <div className="row align-items-stretch image-container">
                     {cards?.map((card) => (
                       <Card
                         key={card.id}
                         imageSrc={card.imageSrc}
                         altText={card.altText}
                         text={card.text}
-                        onClick={() => startChat(card.initialMessage)}
                       />
                     ))}
                   </div>
@@ -318,9 +313,7 @@ const App = () => {
                       handleUserInputChange(e);
                     }}
                     onKeyPress={(e) => {
-                      if (e.key === 'Enter') {
-                        onSendButtonClick();
-                      }
+                      handleKeyPress(e);
                     }}
                   />
                   <div className="input-group-prepend">
@@ -345,9 +338,9 @@ const App = () => {
 };
 
 // Component for rendering each card
-const Card = ({ imageSrc, altText, text, onClick }) => (
-  <div className="col-6">
-    <div className="btn card-btn text-center card border-secondary mb-3" onClick={onClick}>
+const Card = ({ imageSrc, altText, text }) => (
+  <div className="col-6 px-1 py-2 px-md-2">
+    <div className="btn h-100 card-btn text-center card border-secondary mb-3">
       <div className="image-container">
         <img className="card-img my-2" style={{ maxWidth: '60px' }} src={imageSrc} alt={altText} />
       </div>
