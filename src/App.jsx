@@ -74,8 +74,8 @@ const App = () => {
         id: 1,
         imageSrc: './images/Borrower.png',
         altText: 'Borrower',
-        text: ' I am a borrower searching for a mortgage',
-        initialMessage: ' I am a borrower searching for a mortgage',
+        text: 'I am searching for my own mortgage',
+        initialMessage: 'I am searching for my own mortgage',
       },
       {
         id: 2,
