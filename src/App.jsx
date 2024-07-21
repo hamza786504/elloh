@@ -65,29 +65,29 @@ const App = () => {
       },
     ]);
 
-    const handleKeyDown = (e) => {
-      if (e.keyCode === 123) {
-        e.preventDefault();
-      }
-      if (e.ctrlKey && e.shiftKey && e.keyCode === 'I'.charCodeAt(0)) {
-        e.preventDefault();
-      }
-      if (e.ctrlKey && e.shiftKey && e.keyCode === 'J'.charCodeAt(0)) {
-        e.preventDefault();
-      }
-      if (e.ctrlKey && e.keyCode === 'U'.charCodeAt(0)) {
-        e.preventDefault();
-      }
-      if (e.ctrlKey && e.shiftKey && e.keyCode === 'C'.charCodeAt(0)) {
-        e.preventDefault();
-      }
-    };
+    // const handleKeyDown = (e) => {
+    //   if (e.keyCode === 123) {
+    //     e.preventDefault();
+    //   }
+    //   if (e.ctrlKey && e.shiftKey && e.keyCode === 'I'.charCodeAt(0)) {
+    //     e.preventDefault();
+    //   }
+    //   if (e.ctrlKey && e.shiftKey && e.keyCode === 'J'.charCodeAt(0)) {
+    //     e.preventDefault();
+    //   }
+    //   if (e.ctrlKey && e.keyCode === 'U'.charCodeAt(0)) {
+    //     e.preventDefault();
+    //   }
+    //   if (e.ctrlKey && e.shiftKey && e.keyCode === 'C'.charCodeAt(0)) {
+    //     e.preventDefault();
+    //   }
+    // };
 
-    document.addEventListener('keydown', handleKeyDown);
+    // document.addEventListener('keydown', handleKeyDown);
 
-    return () => {
-      document.removeEventListener('keydown', handleKeyDown);
-    };
+    // return () => {
+    //   document.removeEventListener('keydown', handleKeyDown);
+    // };
   }, []);
 
 
@@ -163,14 +163,14 @@ const App = () => {
         ip: 'dummy_ip',
       });
 
-      const botMessage = {
+      const formattedBotMessage = {
         message_id: filteredChat.chat.length + 1,
-        message: response.data.message,
+        message: formatMessage(response.data.message), // Format the bot's message
         timestamp: new Date().toISOString(),
         from: 'bot',
       };
 
-      filteredChat.chat.push(botMessage);
+      filteredChat.chat.push(formattedBotMessage);
       setChats([...updatedChats]);
       setSelectedChat(id);
       localStorage.setItem('chats', JSON.stringify(updatedChats));
@@ -179,6 +179,7 @@ const App = () => {
       console.error('Error sending message:', error);
     }
   };
+
 
   const onCardClick = async (cardText) => {
     setCardGeneratedChat(true);
@@ -238,16 +239,16 @@ const App = () => {
           }
         );
 
-        const botMessage = {
+        const formattedBotMessage = {
           message_id: 1, // Assuming you reset message_id for each chat
-          message: response.data.message,
+          message: formatMessage(response.data.message), // Format the bot's message
           timestamp: new Date().toISOString(),
           from: 'bot',
         };
 
         updatedChats.push({
           chat_id: id,
-          chat: [userMessage, botMessage],
+          chat: [userMessage, formattedBotMessage],
         });
       }
 
@@ -259,6 +260,7 @@ const App = () => {
       console.error('Error sending message:', error);
     }
   };
+
 
   // Function to calculate days ago from timestamp
   const getDaysAgo = (timestamp) => {
@@ -280,6 +282,24 @@ const App = () => {
   const hasUserMessages = selectedChat !== null && chats.some((chat) =>
     chat.chat_id === selectedChat && chat.chat.some((message) => message.from === 'user')
   );
+
+
+  const formatMessage = (text) => {
+    // Regular expression pattern to find URLs
+    let urlRegex = /(?:(?:https?|ftp):\/\/)?[\w/\-?=%.]+\.[\w/\-&?=%.]+/g;
+
+    // Function to replace URLs with "click here" anchor tags
+    const replaceUrlsWithLinks = (text) => {
+      return text.replace(urlRegex, (url) => `<a href="${url}" target="_blank" rel="noopener noreferrer">click here</a>`);
+    };
+
+    // Replace URLs in the text with "click here" anchor tags
+    let formattedText = replaceUrlsWithLinks(text);
+
+    return formattedText;
+  };
+
+
 
   return (
     <>
@@ -370,7 +390,10 @@ const App = () => {
                               {message.from === 'bot' ? (
                                 <>
                                   <div className="d-flex mt-2 justify-content-end">
-                                    <div className="message other-message float-right">{message.message}</div>
+                                    <div
+                                      className="message other-message float-right"
+                                      dangerouslySetInnerHTML={{ __html: message.message }}
+                                    />
                                     <img src="./images/ELLOH.png" alt="avatar" className="img-bot" />
                                   </div>
                                   <hr className='pt-3 mb-2' />
@@ -384,9 +407,13 @@ const App = () => {
                                   ) : (
                                     <div className="text-start">
                                       <div className="message-data">
-                                        <span className="message-data-time">{new Date(message.timestamp).toLocaleString()}</span>
+                                        <span className="message-data-time">
+                                          {new Date(message.timestamp).toLocaleString()}
+                                        </span>
                                       </div>
-                                      <div className="message my-message">{message.message}</div>
+                                      <div className="message my-message">
+                                        {message.message}
+                                      </div>
                                     </div>
                                   )}
                                   <hr className='pt-3 mb-2' />
@@ -394,6 +421,7 @@ const App = () => {
                               )}
                             </div>
                           ))}
+
                         </li>
                       ))}
                   </ul>
