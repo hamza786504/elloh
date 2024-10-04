@@ -283,23 +283,28 @@ const App = () => {
     chat.chat_id === selectedChat && chat.chat.some((message) => message.from === 'user')
   );
 
-
   const formatMessage = (text) => {
-    // Regular expression pattern to find URLs
-    let urlRegex = /(?:(?:https?|ftp):\/\/)?[\w/\-?=%.]+\.[\w/\-&?=%.]+/g;
-
+    // Regular expression pattern to find HTTP and HTTPS URLs
+    let urlRegex = /(?:https?:\/\/[\w-]+(?:\.[\w-]+)+(?:\/[\w-]+)*\/?[\w\-?=%&]*)/g;
+  
     // Function to replace URLs with "click here" anchor tags
     const replaceUrlsWithLinks = (text) => {
-      return text.replace(urlRegex, (url) => `<a href="${url}" target="_blank" rel="noopener noreferrer">click here</a>`);
+      return text.replace(urlRegex, (url) => {
+        // Ensure we are only matching full URLs, and not part of another URL or text
+        return `<a href="${url}" target="_blank" rel="noopener noreferrer">click here</a>`;
+      });
     };
-
+  
     // Replace URLs in the text with "click here" anchor tags
     let formattedText = replaceUrlsWithLinks(text);
-
+  
     return formattedText;
   };
-
-
+  
+  // Example usage
+  const message = "With a FICO score of 750, your starting interest rate would be 10.74%. Check out https://example.com for more info.";
+  console.log(formatMessage(message));
+  
 
   return (
     <>
